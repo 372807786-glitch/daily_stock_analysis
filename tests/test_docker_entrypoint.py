@@ -34,6 +34,22 @@ def test_docker_entrypoint_repairs_ownership_and_user_permissions() -> None:
     assert re.search(r"gosu\s+\"\$APP_USER:\$APP_GROUP\"\s+test\s+-w", entrypoint)
 
 
+def test_documented_compose_exec_commands_run_as_dsa() -> None:
+    safe_exec_prefix = "docker-compose -f ./docker/docker-compose.yml exec -u dsa"
+    unsafe_exec_prefix = "docker-compose -f ./docker/docker-compose.yml exec"
+
+    for doc_path in ("docs/DEPLOY.md", "docs/DEPLOY_EN.md"):
+        doc = (REPO_ROOT / doc_path).read_text(encoding="utf-8")
+
+        assert f"{safe_exec_prefix} stock-analyzer bash" in doc
+        assert f"{safe_exec_prefix} stock-analyzer python main.py --no-notify" in doc
+        assert f"{unsafe_exec_prefix} stock-analyzer bash" not in doc
+        assert (
+            f"{unsafe_exec_prefix} stock-analyzer python main.py --no-notify"
+            not in doc
+        )
+
+
 def _write_fake_command(fakebin: Path, name: str, body: str) -> None:
     command = fakebin / name
     command.write_text(f"#!/bin/sh\n{body}", encoding="utf-8")

@@ -70,10 +70,10 @@ docker-compose -f ./docker/docker-compose.yml build --no-cache
 docker-compose -f ./docker/docker-compose.yml up -d
 
 # Enter container for debugging
-docker-compose -f ./docker/docker-compose.yml exec stock-analyzer bash
+docker-compose -f ./docker/docker-compose.yml exec -u dsa stock-analyzer bash
 
 # Manually run analysis once
-docker-compose -f ./docker/docker-compose.yml exec stock-analyzer python main.py --no-notify
+docker-compose -f ./docker/docker-compose.yml exec -u dsa stock-analyzer python main.py --no-notify
 ```
 
 ### 5. Data Persistence
