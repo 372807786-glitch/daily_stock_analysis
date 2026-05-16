@@ -41,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - [修复] 收紧港股新闻相关度中的裸短码匹配，避免将指数点数等普通数字误判为目标股票代码。
 - [修复] 修复个股新闻相关度中美股小写 ticker 后缀识别与 A/HK 弱相关新闻中文优先比较顺序。
 - [文档] Issue #1356 的结构化检测告警为既有上下文误报：本次仅调整个股新闻检索的相关度评分与分层排序（`direct_company_news` / `sector_related_news` / `macro_market_news`），不触及模型名、provider、LiteLLM 参数、Base URL 及运行时配置清理/迁移语义；无配置回写副作用，回退路径为回滚本次提交。
+- [新功能] 新增 `STOCK_LIST_FETCH_API`，支持从 HTTP(S) 获取远程股票列表，并在失败或为空时回退到 `STOCK_LIST`。
+- [修复] `STOCK_LIST_FETCH_API` 在重定向前校验目标地址，阻断 loopback、link-local 与云元数据地址，同时保留可访问的内网目标。
 
 ## [3.17.1] - 2026-05-16
 
@@ -119,8 +121,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - [文档] 明确 `MARKET_REVIEW_COLOR_SCHEME` 仅为大盘复盘展示配置，枚举为 `green_up`/`red_up`（默认 `green_up`），属于文案与颜色语义层面变更；本次未调整模型名、provider、Base URL、LLM 运行时迁移或运行时清理逻辑。
 - [新功能] 新增 Alert API MVP，支持告警规则 CRUD、启停、一次性测试以及触发/通知结果查询接口，首版覆盖 `price_cross` / `price_change_percent` / `volume_spike`，并保持 legacy 配置兼容和响应脱敏。
 - [修复] 大盘复盘执行结果写入现有分析历史，Web 历史列表可直接查看已生成复盘，避免重复触发分析。
-- [新功能] 自选股配置新增可选 `STOCK_LIST_FETCH_API`，支持从 HTTP(S) 拉取远程股票列表，并在失败或空响应时回退 `STOCK_LIST`。
-- [修复] `STOCK_LIST_FETCH_API` 跟随重定向前校验目标地址，阻断 loopback、link-local 与云 metadata 目标，同时保留运行环境可访问的内网地址支持。
 
 ## [3.16.0] - 2026-05-10
 
